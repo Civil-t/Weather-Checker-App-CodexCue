@@ -64,7 +64,8 @@ const HourlyForecastCard = () => {
                 <div
                   style={{
                     backgroundImage: `url(${getIcon(hour.conditions)})`,
-                    backgroundSize: "cover",
+                    backgroundSize: "contain",
+                    backgroundRepeat: "no-repeat",
                     width: "100%",
                     height: "90%",
                     marginRight: "4rem",

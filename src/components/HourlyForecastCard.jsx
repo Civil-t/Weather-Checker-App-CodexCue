@@ -10,17 +10,20 @@ import FogIcon from "../icons/fog.png";
 import WindIcon from "../icons/windy.png";
 import OvercastIcon from "../icons/overcast.png";
 
-const HourlyForecastCard = () => {
+const HourlyForecastCard = ({ place }) => {
   const [hourlyData, setHourlyData] = useState(null);
 
   useEffect(() => {
-    fetch(
-      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/New%20York?unitGroup=us&include=hours&key=XCW2LFCJQRUA2SNEQZBSHEAG7&contentType=json",
-      {
-        method: "GET",
-        headers: {},
-      }
-    )
+    if (!place) return;
+
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(
+      place
+    )}?unitGroup=us&include=hours&key=XCW2LFCJQRUA2SNEQZBSHEAG7&contentType=json`;
+
+    fetch(url, {
+      method: "GET",
+      headers: {},
+    })
       .then((response) => response.json())
       .then((data) => {
         localStorage.setItem("hourlyData", JSON.stringify(data));
@@ -30,7 +33,7 @@ const HourlyForecastCard = () => {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [place]);
 
   const getIcon = (condition) => {
     const words = condition.toLowerCase().split(" ");

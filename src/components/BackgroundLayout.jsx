@@ -1,7 +1,7 @@
 /* layout for changing bacground images depending on the weather */
 import React, { useState, useEffect } from "react";
 import Dashboard from "./Dashboard";
-
+import { getPlace } from "./Dashboard";
 /* background Images */
 import Clear from "../images/Clear.jpg";
 import Cloudy from "../images/Cloudy.jpg";

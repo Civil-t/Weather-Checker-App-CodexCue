@@ -6,28 +6,61 @@ import WeatherIcons from "./WeatherIcons";
 import HourlyForecastCard from "./HourlyForecastCard";
 import WeeklyForecastCard from "./WeeklyForecastCard";
 
+const apiKey = "XCW2LFCJQRUA2SNEQZBSHEAG7";
+
+export const InputComponent = ({ onEnter }) => {
+  return (
+    <input
+      onKeyUp={(e) => {
+        if (e.key === "Enter") {
+          onEnter(e.target.value);
+        }
+      }}
+      placeholder="Type a City"
+    />
+  );
+};
+
+async function fetchWeatherData(place) {
+  const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(
+    place
+  )}?unitGroup=us&key=${apiKey}&contentType=json`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {},
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch weather data:", error);
+    throw error;
+  }
+}
+
 const Dashboard = () => {
-  /* normal daily data */
+  const [data, setData] = useState(() => {
+    const localData = localStorage.getItem("weatherData");
+    return localData ? JSON.parse(localData) : null;
+  });
+  const [place, setPlace] = useState("Nairobi");
+
   useEffect(() => {
-    fetch(
-      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/New%20York%20City%2CNY?unitGroup=us&key=XCW2LFCJQRUA2SNEQZBSHEAG7&contentType=json",
-      {
-        method: "GET",
-        headers: {},
+    const fetchAndStoreData = async () => {
+      if (place) {
+        const fetchedData = await fetchWeatherData(place);
+        localStorage.setItem("weatherData", JSON.stringify(fetchedData));
+        setData(fetchedData);
       }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        localStorage.setItem("weatherData", JSON.stringify(data));
-      })
+    };
 
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+    fetchAndStoreData();
+  }, [place]);
 
-  const data = JSON.parse(localStorage.getItem("weatherData"));
-  //console.log("FROM DASHBOARD", data);
   if (!data) {
     return <div>Loading...</div>;
   }
@@ -59,7 +92,14 @@ const Dashboard = () => {
         {/* Middle Section - Main Content */}
         <div id="mid-section">
           <div className="search">
-            <input placeholder="Type a City" />
+            <input
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  setPlace(e.target.value);
+                }
+              }}
+              placeholder="Type a City"
+            />
             <i className="bi bi-search "></i>
           </div>
 
@@ -77,13 +117,13 @@ const Dashboard = () => {
               <p>{data.description.split(",")[0]}</p>
             </div>
             <div id="weatherIcon">
-              <WeatherIcons />
+              <WeatherIcons place={place} />
             </div>
           </div>
           {/* Today's Forecast mid section */}
           <div id="today-forecast">
             <h4>Today's Forecast</h4>
-            <HourlyForecastCard />
+            <HourlyForecastCard place={place} apiKey={apiKey} />
           </div>
           {/* Air Condition mid section */}
           <div id="air-conditions">
@@ -118,7 +158,7 @@ const Dashboard = () => {
         </div>
         {/* far right section */}
         <div id="day-forecast">
-          <WeeklyForecastCard />
+          <WeeklyForecastCard place={place} apiKey={apiKey} />
         </div>
       </div>
     </>
@@ -126,3 +166,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+export const getPlace = () => place;

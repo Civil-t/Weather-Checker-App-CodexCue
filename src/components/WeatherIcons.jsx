@@ -14,13 +14,16 @@ const WeatherIcons = () => {
   const [icon, setIcon] = useState();
 
   useEffect(() => {
-    fetch(
-      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/New%20York%20City%2CNY?unitGroup=us&key=XCW2LFCJQRUA2SNEQZBSHEAG7&contentType=json",
-      {
-        method: "GET",
-        headers: {},
-      }
-    )
+    if (!place) return;
+
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(
+      place
+    )}?unitGroup=us&include=hours&key=XCW2LFCJQRUA2SNEQZBSHEAG7&contentType=json`;
+
+    fetch(url, {
+      method: "GET",
+      headers: {},
+    })
       .then((response) => response.json())
       .then((data) => {
         if (data.currentConditions.conditions) {

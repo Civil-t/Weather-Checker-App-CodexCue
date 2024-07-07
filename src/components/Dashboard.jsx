@@ -6,7 +6,7 @@ import WeatherIcons from "./WeatherIcons";
 import HourlyForecastCard from "./HourlyForecastCard";
 import WeeklyForecastCard from "./WeeklyForecastCard";
 
-const apiKey = "XCW2LFCJQRUA2SNEQZBSHEAG7";
+const apiKey = import.meta.env.VITE_API_KEY;
 
 export const InputComponent = ({ onEnter }) => {
   return (
@@ -117,7 +117,7 @@ const Dashboard = () => {
               <p>{data.description.split(",")[0]}</p>
             </div>
             <div id="weatherIcon">
-              <WeatherIcons place={place} />
+              <WeatherIcons place={place} apiKey={apiKey} />
             </div>
           </div>
           {/* Today's Forecast mid section */}

@@ -10,14 +10,14 @@ import FogIcon from "../icons/fog.png";
 import WindIcon from "../icons/windy.png";
 import OvercastIcon from "../icons/overcast.png";
 
-const WeeklyForecastCard = ({ place }) => {
+const WeeklyForecastCard = ({ place, apiKey }) => {
   const [weeklyData, setWeeklyData] = useState(null);
 
   useEffect(() => {
     if (!place) return;
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(
       place
-    )}?unitGroup=us&key=XCW2LFCJQRUA2SNEQZBSHEAG7&contentType=json`;
+    )}?unitGroup=us&key=${apiKey}&contentType=json`;
 
     fetch(url, {
       method: "GET",

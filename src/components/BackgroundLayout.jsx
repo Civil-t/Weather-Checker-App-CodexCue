@@ -11,12 +11,14 @@ import Snow from "../images/snow.jpg";
 import Stormy from "../images/Stormy.jpg";
 import Sunny from "../images/Sunny.jpg";
 
+const apiKey = import.meta.env.VITE_API_KEY;
+
 const BackgroundLayout = () => {
   const [image, setImage] = useState();
 
   useEffect(() => {
     fetch(
-      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/New%20York%20City%2CNY?unitGroup=us&key=XCW2LFCJQRUA2SNEQZBSHEAG7&contentType=json",
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/New%20York%20City%2CNY?unitGroup=us&key=${apiKey}&contentType=json`,
       {
         method: "GET",
         headers: {},

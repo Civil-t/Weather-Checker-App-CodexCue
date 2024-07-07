@@ -10,7 +10,9 @@ import FogIcon from "../icons/fog.png";
 import WindIcon from "../icons/windy.png";
 import OvercastIcon from "../icons/overcast.png";
 
-const WeatherIcons = () => {
+const apiKey = import.meta.env.VITE_API_KEY;
+
+const WeatherIcons = ({ place }) => {
   const [icon, setIcon] = useState();
 
   useEffect(() => {
@@ -18,7 +20,7 @@ const WeatherIcons = () => {
 
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(
       place
-    )}?unitGroup=us&include=hours&key=XCW2LFCJQRUA2SNEQZBSHEAG7&contentType=json`;
+    )}?unitGroup=us&include=hours&key=${apiKey}&contentType=json`;
 
     fetch(url, {
       method: "GET",
